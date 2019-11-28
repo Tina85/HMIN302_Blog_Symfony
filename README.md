@@ -1,0 +1,1 @@
+# HMIN302_Blog_Symfony
