@@ -1,20 +1,94 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello CrudController!{% endblock %}
+{% block title %}Admin{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+<div class="jumbotron" class="mb-0">
+	<div class="container">
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ 'D:/AIGLE/M2/S3/HMIN302-E-application/Partie_3_Symfony/Projet/HMIN302_Blog_Symfony/src/Controller/CrudController.php'|file_link(0) }}">src/Controller/CrudController.php</a></code></li>
-        <li>Your template at <code><a href="{{ 'D:/AIGLE/M2/S3/HMIN302-E-application/Partie_3_Symfony/Projet/HMIN302_Blog_Symfony/templates/crud/index.html.twig'|file_link(0) }}">templates/crud/index.html.twig</a></code></li>
-    </ul>
+		{% if id_post > -1 %}
+			<div class="alert alert-success"  role="alert">
+			  Le post N°{{id_post}} à été supprimé avec succès!
+			</div>
+		{% endif %}
+
+		<a href="{{ path('new_post')}}">
+	    	<button type="button" class="btn btn-primary">+ Add post</button>
+		</a>
+		<a href="{{ path('admin')}}">
+			<button type="button" class="btn btn-secondary">Manage posts</button>
+		</a>
+	
+
+	<div class="mt-2 col-md-12">
+		<table class="table">
+		  <thead>
+		    <tr>
+		      <th scope="col">ID</th>
+		      <th scope="col">Title</th>
+		      <th scope="col">Published</th>
+		      <th scope="col">Content</th>
+		      <th scope="col">Manage</th>
+		    </tr>
+		  </thead>
+		  <tbody>
+		  	{% for post in posts %}
+			    <tr>
+			      <th scope="row">{{post.id}}</th>
+			      <td>{{post.title}}</td>
+			      <td>{{post.published | date("d/m/Y")}}</td>
+			      <td>{{ post.content|truncate(20, false, "...")|raw }}</td>
+			      <td>
+			      	<a href="{{ path('display_post', {'slug': post.slug})}}">
+			      		<button type="button" class="btn btn-outline-success">View</button>
+					</a>
+					<a href="{{ path('edit_post', {'id': post.id})}}">
+						<button type="button" class="btn btn-outline-dark">Edit</button>
+					</a>
+						<button type="button" class="btn btn-outline-danger" onClick="btn_delete({{post.id}})">Delete</button>
+			      </td>
+
+			    </tr>
+		   	{% endfor %}
+		  </tbody>
+		</table>
+
+	</div>
 </div>
+</div>
+{% endblock %}
+{% block javascripts %}
+
+<script type="text/javascript"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+<script type="text/javascript">
+
+	function btn_delete($id_post){
+		var id = parseInt($id_post,10);
+
+		swal({
+	      title: "Delete",
+	      text: "Êtes-vous sur de vouloir supprimer le post N°"+id+"?",
+	      type: "warning",
+	      icon: "warning",
+	      buttons: true,
+	      dangerMode: true,
+	      confirmButtonText: "Delete",
+	      cancelButtonText: "Cancel"
+	      }
+	    ).then(
+	      function (isConfirm) {
+	        if (isConfirm) {
+				var id = parseInt($id_post,10);
+	        	url="{{ path('delete_post', {'id': 'id_post'}) }}";
+	        	url = url.replace("id_post", id);
+				window.location.href= url
+	        }
+	      }
+	    );
+	}
+
+</script>
 {% endblock %}

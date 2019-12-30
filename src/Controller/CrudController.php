@@ -4,55 +4,74 @@ namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use App\Form\Type\PostType;
 use App\Entity\Post;
 
 class CrudController extends AbstractController
 {
     /**
-     * @Route("/crud", name="crud")
+     * @Route("/admin", name="admin")
      */
     public function index()
     {
+        //get posts
+        $repository = $this->getDoctrine()->getRepository(Post::class);
+        $posts = $repository->findAll();
+
         return $this->render('crud/index.html.twig', [
-            'controller_name' => 'CrudController',
+            'posts' => $posts,
+            'id_post' => -1
         ]);
     }
 
     /**
-     * @Route("/create", name="create_new_post")
+     * @Route("/post/new", name="new_post")
      */
-    public function createPost(): Response
+    public function createPost(Request $request)
     {
         $entityManager = $this->getDoctrine()->getManager();
 
         $post = new Post();
-        $post->setTitle('Post Name');
+
+        /*$post->setTitle('Post Name');
         $post->setContent('Content Post');
         $post->setSlug('Slug Post');
         $post->setDisplay(true);
         $post->setPublished(new \DateTime("2019/11/21"));
+        */
+        $form = $this->createForm(PostType::class, $post);
 
-        // tell Doctrine to (eventually) save the Post (no queries yet)
-        $entityManager->persist($post);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $post = $form->getData();
 
-        // actually executes the queries (i.e. the INSERT query)
-        $entityManager->flush();
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($post);
+            $entityManager->flush();
 
-        return new Response('Post Created ');
+            return $this->redirectToRoute('admin');
+        }
+
+        return $this->render('crud/newPost.html.twig', [
+            'form' => $form->createView(),
+            ]);
     }
 
     /**
-     * @Route("/post/{id}", name="display_post")
+     * @Route("/post/{slug}", name="display_post")
      */
-    public function displayPost(int $id)
+    public function displayPost($slug)
     {
         $repository = $this->getDoctrine()->getRepository(Post::class);
 
-        $post = $repository->find($id);
+        $post = $repository->findOneBy(['slug' => $slug]);
 
         return $this->render('crud/displayPost.html.twig', [
-            'idPost' => $post->getTitle()
+            'post' => $post
         ]);
     }
 
@@ -71,11 +90,11 @@ class CrudController extends AbstractController
 	        );
 	    }
 
-	    $post->setTitle('Update post name!');
+	    $post->setTitle('Update post name !');
 	    $entityManager->flush();
 
 	    return $this->redirectToRoute('display_post', [
-	        'id' => $post->getId()
+	        'slug' => $post->getSlug()
 	    ]);
 	}
         
@@ -97,7 +116,12 @@ class CrudController extends AbstractController
 	    $entityManager->remove($post);
 		$entityManager->flush();
 
-		return new Response('Post deleted ');
+        $repository = $this->getDoctrine()->getRepository(Post::class);
+        $posts = $repository->findAll();
 
+		return  $this->render('crud/index.html.twig', [
+            'posts' => $posts,
+            'id_post' => $id
+        ]);
     }
 }

@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Admin{% endblock %}
+
+{% block body %}
+
+	<div class="alert alert-success" id="deleteP" role="alert">
+	  Le post N°{{id_post}} à été supprimé avec succès!
+	</div>
+{% endblock %}
+
+{% block javascripts %}
+<script type="text/javascript">
+ $('#deleteP').hide();
+</script>
+{% endblock %}

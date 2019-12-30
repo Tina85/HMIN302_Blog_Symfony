@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+
+{% form_theme form 'bootstrap_4_layout.html.twig' %}
+
+	{% block body %}
+	<div class="jumbotron" class="mb-0">
+		<div class="container">
+		    <h2>Nouveau post</h2>
+		    {{ form(form) }}
+
+		</div>
+	</div>
+	{% endblock %}
