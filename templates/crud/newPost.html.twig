@@ -4,11 +4,71 @@
 {% form_theme form 'bootstrap_4_layout.html.twig' %}
 
 	{% block body %}
-	<div class="jumbotron" class="mb-0">
 		<div class="container">
-		    <h2>Nouveau post</h2>
-		    {{ form(form) }}
+			<div class="row">
+				<div class="col-sm-4">
+						<h2><b>Nouveau post</b></h2>
+					
+					<img id='img-upload' src="/images/no_img.jpg" />
+				    <div class="input-group">
+				      	<input type="text" class="form-control" readonly>
+				        <span class="input-group-btn">
+				            <span class="btn btn-default btn-file">
+				                <input type="file" id="imgInp"> parcourir... 
+				            </span>
+				        </span>
+				    </div>
+    			</div>
+				<div class="col align-self-center mr-2">
+					{{ form(form) }}
+					<a href="{{ path('admin_posts')}}" type="button" class="btn btn-secondary">Voir tous les posts</a>
 
+				</div>
+			</div>
 		</div>
-	</div>
 	{% endblock %}
+
+
+{% block javascripts %}
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+
+<script type="text/javascript">
+	$(document).ready( function() {
+    	$(document).on('change', '.btn-file :file', function() {
+		var input = $(this),
+			label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+		input.trigger('fileselect', [label]);
+		});
+
+		$('.btn-file :file').on('fileselect', function(event, label) {
+		    
+		    var input = $(this).parents('.input-group').find(':text'),
+		        log = label;
+		    
+		    if( input.length ) {
+		        input.val(log);
+		    } else {
+		        if( log ) alert(log);
+		    }
+	    
+		});
+		function readURL(input) {
+		    if (input.files && input.files[0]) {
+		        var reader = new FileReader();
+		        
+		        reader.onload = function (e) {
+		            $('#img-upload').attr('src', e.target.result);
+		        }
+		        
+		        reader.readAsDataURL(input.files[0]);
+		    }
+		}
+
+		$("#imgInp").change(function(){
+		    readURL(this);
+		}); 	
+	});
+	</script>
+{% endblock %}

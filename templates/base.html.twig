@@ -17,15 +17,30 @@
 
     <body>
         <div class="container-fluid">
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-            <a class="navbar-brand" href="/">
-                <font face="Comic Sans MS" color="">Blog 😃</font>
-            </a>
-        </nav>
+            <nav class="navbar navbar-expand-lg navbar-dark bg-dark {{ app.session.flashbag.peek('success')|length > 0 ? '' : 'mb-0' }}">
+                <a class="navbar-brand" href="/">
+                    <font face="Comic Sans MS" color="">Blog 😃</font>
+                </a>
+            </nav>
 
-        {% block body %}{% endblock %}
-        {% block javascripts %}
-        {% endblock %}
-       </div>
+            <div class="jumbotron mb-0">
+
+                {% for message in app.flashes('created')%}
+                    <div class="alert alert-success">
+                        {{message}}
+                    </div>
+                {%endfor%}
+                {% for message in app.flashes('deleted')%}
+                    <div class="alert alert-success">
+                        {{message}}
+                    </div>
+                {%endfor%}
+
+
+            {% block body %}{% endblock %}
+            {% block javascripts %}{% endblock %}
+
+            </div>
+        </div>
     </body>
 </html>

@@ -14,27 +14,24 @@ use App\Entity\Post;
 class CrudController extends AbstractController
 {
     /**
-     * @Route("/admin", name="admin")
+     * @Route("/admin/posts", name="admin_posts")
      */
     public function index()
     {
-        //get posts
+        //get all posts
         $repository = $this->getDoctrine()->getRepository(Post::class);
         $posts = $repository->findAll();
 
         return $this->render('crud/index.html.twig', [
-            'posts' => $posts,
-            'id_post' => -1
+            'posts' => $posts            
         ]);
     }
 
     /**
-     * @Route("/post/new", name="new_post")
+     * @Route("/admin/post/new", name="new_post")
      */
     public function createPost(Request $request)
     {
-        $entityManager = $this->getDoctrine()->getManager();
-
         $post = new Post();
 
         /*$post->setTitle('Post Name');
@@ -46,14 +43,19 @@ class CrudController extends AbstractController
         $form = $this->createForm(PostType::class, $post);
 
         $form->handleRequest($request);
+
         if ($form->isSubmitted() && $form->isValid()) {
             $post = $form->getData();
+            $post->setPublished(new \DateTime('now'));
+            $post->setDisplay(true);
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($post);
             $entityManager->flush();
 
-            return $this->redirectToRoute('admin');
+            $this->addFlash('created','Post crée avec succès!');
+
+            return $this->redirectToRoute('admin_posts');
         }
 
         return $this->render('crud/newPost.html.twig', [
@@ -76,7 +78,7 @@ class CrudController extends AbstractController
     }
 
     /**
-     * @Route("/post/edit/{id}", name="edit_post")
+     * @Route("/admin/post/edit/{id}", name="edit_post")
      */
     public function editPost(int $id)
     {
@@ -100,7 +102,7 @@ class CrudController extends AbstractController
         
 
     /**
-     * @Route("/post/delete/{id}", name="delete_post")
+     * @Route("/admin/post/delete/{id}", name="delete_post")
      */
     public function deletePost(int $id): Response
     {
@@ -116,12 +118,8 @@ class CrudController extends AbstractController
 	    $entityManager->remove($post);
 		$entityManager->flush();
 
-        $repository = $this->getDoctrine()->getRepository(Post::class);
-        $posts = $repository->findAll();
+        $this->addFlash('deleted', 'Le post a été supprimé avec succès!');
+        return $this->redirectToRoute('admin_posts');
 
-		return  $this->render('crud/index.html.twig', [
-            'posts' => $posts,
-            'id_post' => $id
-        ]);
     }
 }

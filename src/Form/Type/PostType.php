@@ -18,12 +18,6 @@ class PostType extends AbstractType
             ->add('title', TextType::class, ['label' => 'Titre'])
             ->add('slug', TextType::class )
             ->add('content', TextareaType::class, ['label' => 'Contenu'])
-            ->add('published', DateType::class)
-            ->add('display', CheckboxType::class, [
-			    'label'    => 'hide',
-			    'required' => false,
-			])
-
             ->add('publier', SubmitType::class)
         ;
     }

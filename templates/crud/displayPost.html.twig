@@ -7,18 +7,18 @@
 {% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
-
 <div class="jumbotron">
-	
-	<div>
-	    <center><h3>Post {{ post.title }} </h3>
-	    <p>publié le : {{post.published | date("d/m/Y")}}</p>
-	    </center>
-	</div>
+
+	<article>
+		<header>
+		    <h3>Post {{ post.title }} </h3>
+		    <p>publié le : {{post.published | date("d/m/Y")}}</p>
+	    </header>
+	    <p>
+	    	{{post.content}}
+	    </p>
+	</article>
+
 
 </div>
 
