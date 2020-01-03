@@ -3,9 +3,15 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\File;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\PostRepository")
+ * @UniqueEntity("slug")
+ * @Vich\Uploadable
  */
 class Post
 {
@@ -17,12 +23,13 @@ class Post
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255, unique=true)
+     * @ORM\Column(type="string", length=255)
      */
     private $title;
 
     /**
-     * @ORM\Column(type="string", length=255, unique=true)
+     * @Assert\Regex ("/^[^ ]+$/")
+     * @ORM\Column(type="string", length=255)
      */
     private $slug;
 
@@ -30,6 +37,18 @@ class Post
      * @ORM\Column(type="text")
      */
     private $content;
+
+    /**
+    * @var string |null
+    * @ORM\Column(type="string", length=255)
+    */
+    private $filename;
+
+    /**
+    * @Vich\UploadableField(mapping="post_image", fileNameProperty="filename")
+    * @var File |null
+    */
+    private $imageFile;
 
     /**
      * @ORM\Column(type="datetime")
@@ -83,6 +102,44 @@ class Post
     public function setContent(string $content): self
     {
         $this->content = $content;
+
+        return $this;
+    }
+
+    /**
+    * @return null|string
+    */
+    public function getFilename(): ?string
+    {
+        return $this->filename;
+    }
+
+    /**
+    * @param null|string $filename
+    * @return Post
+    */
+    public function setFilename(?string $filename): Post
+    {
+        $this->filename = $filename;
+
+        return $this;
+    }
+
+    /**
+    * @return null|File
+    */
+    public function getImageFile(): ?File
+    {
+        return $this->imageFile;
+    }
+
+    /**
+    * @param null|File $imageFile
+    * @return Post
+    */
+    public function setImageFile(?File $imageFile): Post
+    {
+        $this->imageFile = $imageFile;
 
         return $this;
     }

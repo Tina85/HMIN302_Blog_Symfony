@@ -1,18 +1,18 @@
 {% extends 'base.html.twig' %}
 
-
 {% block body %}
 
-   	<h3>Posts</h3>
-	<ul>
-		{% for post in posts %}
-		<li>
-			<h4>{{ post.title }}</h4>
-			<p>{{ post.content|truncate(50, true, "...")|raw }}
-		      	<a href="{{ path('display_post', {'slug': post.getSlug()}) }}"> lire la suite</a>
-		   	</p>
-		</li>
-		{% endfor %}
-	</ul>
+<div class="container ">
+   	<h3>Tous les Posts</h3>
+   	<div class="row">
+	{% for post in posts %}
+	   	<div class="col-md-4">
+		{% include 'blog/_post.html.twig' %}
+		</div>
+	{% endfor %}
+	
+</div>
+</div>
+
 
 {% endblock %}

@@ -1,0 +1,10 @@
+<div class="card mb-4">
+	<div class="card-body">
+		<h5 class="card-title">
+			{{ post.title }}
+			</h5>
+		<p>{{ post.content|truncate(50, true, "...")|raw }}
+		    <a href="{{ path('display_post', {'slug': post.getSlug()}) }}"> lire la suite</a>
+		</p>
+	</div>
+</div>

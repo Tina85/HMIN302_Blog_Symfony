@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+{% block title %}Edit Post{% endblock %}
+
+{% block body %}
+	<div class="container ">
+		<h2>Editer un post</h2>
+		{{form_start(form)}}
+			{{ form_row(form.title) }}
+			{{ form_row(form.slug) }}
+			{{ form_row(form.content) }}
+
+			{{ form_rest(form) }}
+
+			{{ form_row(form.publier, { 'label': 'Editer' }) }}
+			
+		{{form_end(form)}}
+
+	</div>
+
+{% endblock %}

@@ -14,14 +14,13 @@ use App\Entity\Post;
 class CrudController extends AbstractController
 {
     /**
-     * @Route("/admin/posts", name="admin_posts")
+     * @Route("/admin", name="admin_posts")
      */
     public function index()
     {
         //get all posts
         $repository = $this->getDoctrine()->getRepository(Post::class);
         $posts = $repository->findAll();
-
         return $this->render('crud/index.html.twig', [
             'posts' => $posts            
         ]);
@@ -48,6 +47,9 @@ class CrudController extends AbstractController
             $post = $form->getData();
             $post->setPublished(new \DateTime('now'));
             $post->setDisplay(true);
+            if($post->getFilename()==null){
+                $post->setFilename("no_img.jpg");
+            }
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($post);
@@ -78,9 +80,9 @@ class CrudController extends AbstractController
     }
 
     /**
-     * @Route("/admin/post/edit/{id}", name="edit_post")
+     * @Route("/admin/post/edit/{id}", name="edit_post", requirements={"id"="\d+"})
      */
-    public function editPost(int $id)
+    public function editPost(int $id, Request $request)
     {
 
 	    $entityManager = $this->getDoctrine()->getManager();
@@ -91,6 +93,34 @@ class CrudController extends AbstractController
 	            'No post found for id '.$id
 	        );
 	    }
+
+        $form = $this->createForm(PostType::class, $post);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $post = $form->getData();
+            $post->setUpdated(new \DateTime('now'));
+            $post->setDisplay(true);
+            if($post->getFilename()==null){
+                $post->setFilename("no_img.jpg");
+            }
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($post);
+            $entityManager->flush();
+
+            $this->addFlash('updated','Post modifié avec succès!');
+
+            return $this->redirectToRoute('admin_posts');
+        }
+
+        
+        return $this->render('crud/editPost.html.twig', [
+            'post' => $post,
+            'form' => $form->createView()
+        ]);
+
+
 
 	    $post->setTitle('Update post name !');
 	    $entityManager->flush();

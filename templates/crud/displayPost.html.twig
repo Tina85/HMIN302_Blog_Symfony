@@ -1,26 +1,29 @@
-{% extends 'base.html.twig' %}
+{% extends "@FOSUser/layout.html.twig" %}
 
-{% block title %}Display post!{% endblock %}
+{% block title %}Display Post{% endblock %}
 
 {% block stylesheets %}
         <link href="{{ asset('bootstrap/css/bootstrap.css') }}" rel="stylesheet" />
 {% endblock %}
 
 {% block body %}
-<div class="jumbotron">
-
+<div class="container">
 	<article>
 		<header>
-		    <h3>Post {{ post.title }} </h3>
-		    <p>publié le : {{post.published | date("d/m/Y")}}</p>
+		    <h2> {{ post.title }} </h2>
+
+		    <p>publié le : {{post.published | date("d/m/Y")}}
+		    {% if(post.published != post.updated)%}
+		    	 | Modifié le : {{post.updated| date("d/m/Y")}}</p>
+
+		    {%endif%}
+		    	
 	    </header>
 	    <p>
 	    	{{post.content}}
 	    </p>
 	</article>
 
-
+	<a href="{{ path('homepage')}}" type="button" class="btn btn-secondary">Retour</a>
 </div>
-
-
 {% endblock %}
