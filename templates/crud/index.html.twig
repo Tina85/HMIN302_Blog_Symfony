@@ -24,17 +24,34 @@
 		      <th scope="col">ID</th>
 		      <th scope="col">Titre</th>
 		      <th scope="col">Publié le</th>
+		      <th scope="col">Mis à jour le</th>
+		      <th scope="col">Visible</th>
 		      <th scope="col">Contenu</th>
-		      <th scope="col">Mises à jour</th>
+		      <th scope="col">Actions</th>
 		    </tr>
 		  </thead>
 		  <tbody>
 		  	{% for post in posts %}
 			    <tr>
 			      <th scope="row">{{post.id}}</th>
-			      <td>{{post.title}}</td>
+			      <td>{{post.title|truncate(25, true, "...")|raw }}</td>
 			      <td>{{post.published | date("d/m/Y")}}</td>
-			      <td>{{ post.content|truncate(25, false, "...")|raw }}</td>
+			      <td>
+				      {%if post.updated == post.published %}
+				      		<p> - </p>
+				      	{%else%}
+				      		 {{post.updated | date("d/m/Y")}}
+				      {%endif%}
+			     </td>
+
+			      <td>
+			      	{%if post.display == 1 %}
+			      		<p>Oui</p>
+			      	{%else%}
+			      		<p>Non</p>
+			      	{%endif%}
+			      </td>
+			      <td>{{ post.content|truncate(30, false, "...")|raw }}</td>
 			      <td>
 			      	<a href="{{ path('display_post', {'slug': post.slug})}}">
 			      		<button type="button" class="btn btn-outline-success">View</button>

@@ -12,9 +12,9 @@
 					<img id='img-upload' src="/images/posts/no_img.png" />
 
 					{{ form_row(form.imageFile) }}
-					<input type="file" id="form_age" name="form[imageFile]" />
 
-				    <div class="input-group">
+					<!-- A finir après rendu-->
+				    <div class="input-group" style="visibility:hidden;">
 				      	<input type="text" class="form-control" readonly>
 				        <span class="input-group-btn">
 				            <span class="btn btn-default btn-file">
@@ -28,6 +28,7 @@
 
 					{{ form_row(form.slug) }}
 					{{ form_row(form.content) }}
+					{{ form_row(form.display) }}
 
 					{{ form_rest(form) }}
 
@@ -38,7 +39,7 @@
 				</div>
 			</div>
 		</div>
-	{% endblock %}
+{% endblock %}
 
 
 {% block javascripts %}

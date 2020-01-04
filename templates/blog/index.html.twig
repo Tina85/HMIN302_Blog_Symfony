@@ -3,15 +3,23 @@
 {% block body %}
 
 <div class="container ">
-   	<h3>Tous les Posts</h3>
-   	<div class="row">
+   	<h3>Tous les Posts de                 
+   		<font face="Comic Sans MS" style="color:green;">Ma Vie Healthy</font>
+	</h3>
+   	<div class="row mt-4">
 	{% for post in posts %}
+		{%if post.display == 1 %}
 	   	<div class="col-md-4">
 		{% include 'blog/_post.html.twig' %}
 		</div>
+		{%endif%}
 	{% endfor %}
 	
-</div>
+	</div>
+
+	<div class="pagination">
+		{{knp_pagination_render(posts)}}
+	</div>
 </div>
 
 

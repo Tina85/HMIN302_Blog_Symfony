@@ -1,9 +1,11 @@
 <div class="card mb-4">
+
+	<img src="/images/posts/{{post.filename}}" alt="card-img-top" style="width: 100%; height:auto;">
 	<div class="card-body">
 		<h5 class="card-title">
 			{{ post.title }}
 			</h5>
-		<p>{{ post.content|truncate(50, true, "...")|raw }}
+		<p>{{ post.content|truncate(100, true, "...")|raw }}
 		    <a href="{{ path('display_post', {'slug': post.getSlug()}) }}"> lire la suite</a>
 		</p>
 	</div>

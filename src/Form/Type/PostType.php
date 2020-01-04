@@ -19,6 +19,7 @@ class PostType extends AbstractType
             ->add('title', TextType::class, ['label' => 'Titre'])
             ->add('slug', TextType::class, ['help' => 'Le slug doit être unique et ne contient pas d\'éspaces!',] )
             ->add('content', TextareaType::class, ['label' => 'Contenu'])
+            ->add ('display', CheckboxType::class, ['label' => 'v-Visible', 'required' => false, 'data' => true])
             ->add('imageFile', FileType::class,[
             	'required' => false,
             	'label' => ' '])

@@ -11,8 +11,10 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use App\Form\Type\PostType;
 use App\Entity\Post;
 
+const NAME_NO_IMAGE = "no_img.png";
 class CrudController extends AbstractController
 {
+
     /**
      * @Route("/admin", name="admin_posts")
      */
@@ -46,10 +48,15 @@ class CrudController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $post = $form->getData();
             $post->setPublished(new \DateTime('now'));
-            $post->setDisplay(true);
+            $post->setUpdated($post->getPublished());
+            
             if($post->getFilename()==null){
-                $post->setFilename("no_img.jpg");
+                $post->setFilename(NAME_NO_IMAGE);
             }
+            if($post->getDisplay()==='false'){
+                $post->setDisplay(0);
+            }else
+                $post->setDisplay(1);
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($post);
@@ -100,11 +107,19 @@ class CrudController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $post = $form->getData();
+            
+
             $post->setUpdated(new \DateTime('now'));
-            $post->setDisplay(true);
+
             if($post->getFilename()==null){
-                $post->setFilename("no_img.jpg");
+                $post->setFilename(NAME_NO_IMAGE);
             }
+            if($post->getDisplay()==='false')
+                $post->setDisplay(0);
+
+            if($post->getDisplay() === 'true')
+                $post->setDisplay(1);
+
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($post);
             $entityManager->flush();
